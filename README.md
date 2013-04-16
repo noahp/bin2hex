@@ -1,7 +1,7 @@
 bin2hex
 =====
 
-Simple binary file to Intel HEX file converter (bin to hex)
+Simple binary file to Intel HEX file converter (bin to hex). For usage try $bin2hex.py -h
 
 License
 =====
