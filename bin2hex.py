@@ -222,7 +222,6 @@ def commandline_split(option, opt, value, parser):
         # save the converted values to a list for examination later
         binlistout.append((addr, binfile))
 
-
     # now check if any file(size) + address will overlap another
     for i, binentry1 in enumerate(binlistout):
         for j, binentry2 in enumerate(binlistout):
@@ -257,13 +256,13 @@ def process_command_line(argv=None):
     # define options here:
     parser.add_option('-r', '--format', dest='format', type="int",
                       default=4, action='callback', callback=checkhextypearg,
-                      help='HEX format subtype. 0 is I8HEX, 2 is I16HEX, 4 is I32HEX. Default is %default. ONLY %default ACCEPTED RIGHT NOW.')
+                      help='HEX format subtype. 0 is I8HEX, 2 is I16HEX, 4 is I32HEX. Default is %default. ONLY 2 AND 4 ACCEPTED RIGHT NOW.')
     parser.add_option('-b', '--binaries', dest='binaries', type='string',
                       default=None, action='callback', callback=commandline_split,
                       help='List of binary file inputs and start addresses. Addresses are either decimal or hex (must be prepended with 0x).', metavar='ADDRESS,FILE,ADDRESS,FILE,...')
     parser.add_option('-o', '--outfile', dest='outfile',
                       default=None,
-                      help='Output file path.', metavar='PATH')
+                      help='Output file path, optional, defaults to first input binary file dot hex.', metavar='PATH')
     parser.add_option('-q', '--quiet',action="store_true", dest="quiet",
                       default=False,
                       help="Suppress non-critical output on stdout.")
@@ -293,16 +292,6 @@ if __name__ == "__main__":
         print "bin2hex.py %s"%("0.1")
         sys.exit(0)
 
-    # check output file
-    try:
-        if settings.outfile is None:
-            raise ValueError("Output file must be set!")
-        with open(settings.outfile, 'w') as f:
-            pass
-    except Exception as inst:
-        print "Error with output file: %s"%inst
-        sys.exit(errno.EINVAL)
-
     # make sure the selected hex record type can represent the largest address
     maxaddress = HEX_ALLOWED_ADDRESS_TYPES[settings.format]
     for (addr, binfile) in settings.binaries:
@@ -312,6 +301,20 @@ if __name__ == "__main__":
         if addr > maxaddress:
             print "Error, address size 0x%0X is too large for format!"%(addr)
             exit(errno.EINVAL)
+
+    # check output file
+    try:
+        if settings.outfile is None:
+            # set output file based on first input file.
+            settings.outfile = os.path.splitext(settings.binaries[0][1])[0]+".hex"
+            # raise ValueError("Output file must be set!")
+
+        # now check the output file, make sure we can open it
+        with open(settings.outfile, 'w') as f:
+            pass
+    except Exception as inst:
+        print "Error with output file: %s"%inst
+        sys.exit(errno.EINVAL)
 
     # now, produce the hex file from the input files and addresses
     hexfiledata = generatehexfile(settings.binaries, settings.format)
