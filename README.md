@@ -5,7 +5,7 @@ Simple binary file to Intel HEX file converter (bin to hex) written in python. F
 
 Note
 -----
-There is this python module already- http://pythonhosted.org/IntelHex/
+There is this python module already- http://pythonhosted.org/IntelHex/  
 Which includes merging hex files. So this project is redundant.
 
 License
