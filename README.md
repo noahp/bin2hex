@@ -1,12 +1,9 @@
+**NOTE: this project is no longer maintained, instead check out https://github.com/bialix/intelhex which does a better job!***
+
 bin2hex
 =====
 
 Simple binary file to Intel HEX file converter (bin to hex) written in python. For usage try $bin2hex.py -h
-
-Note
------
-There is this python module already- http://pythonhosted.org/IntelHex/  
-Which includes merging hex files. So this project is redundant.
 
 License
 =====
